@@ -67,7 +67,6 @@ select loan_id from loan order by payments desc limit 1;
 #    Show the account_id and the corresponding amount
 select amount from loan order by account_id limit 5;
 
-
 # 7. What are the account_ids with the lowest loan amount that have a 
 #    loan duration of 60 in the loan table?
 select account_id from loan where duration = 60 order by amount limit 5;
@@ -78,7 +77,7 @@ select account_id from loan where duration = 60 order by amount limit 5;
 # Note: There shouldn't be a table name order, since order is reserved from the ORDER BY clause. 
 # You have to use backticks to escape the order table name.
 select distinct(k_symbol) from bank.order where length(k_symbol) > 1;
-# if not filtering by length(), some entries are empty
+	# if not filtering by length(), some entries are empty
 
 
 # 9.
