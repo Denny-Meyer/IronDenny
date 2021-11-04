@@ -65,13 +65,64 @@ group by
 order by total desc ;
 
 
-select title, movie_star from film
+select title from film
 where film_id in (
-select film_id, movie_star from sakila.film_actor 
-where actor_id = (
-select actor_id as movie_star from sakila.film_actor
-group by 
-	actor_id 
+				select film_id from sakila.film_actor 
+				where actor_id = (
+					select actor_id as movie_star from sakila.film_actor
+						group by 
+							actor_id
+						order by 
+							count(actor_id) desc limit 1
+                            )
+					);
+
+# 7. Films rented by most profitable customer. 
+# You can use the customer table and payment table 
+# to find the most profitable customer ie the customer 
+# that has made the largest sum of payments
+
+select * from customer;
+select * from payment;
+
+select title from film
+where film_id in (
+select film_id from inventory
+where inventory_id in (
+
+select inventory_id from rental 
+where
+	customer_id = (
+select customer_id from payment
+group by
+	customer_id
+order by
+	sum(amount) desc limit 1)));
+
+select customer_id, avg(amount) from payment
+group by
+	customer_id
 order by 
-	count(actor_id) desc limit 1));
-  
+	avg(amount);
+
+select @mean_var;
+
+set @mean_var =(select avg(mean) from
+( 
+select avg(amount) as mean 
+	from 
+		payment
+	group by
+		customer_id
+	order by
+		avg(amount)
+)sub1);
+
+select customer_id, avg(amount) from payment
+group by
+	customer_id
+having
+	avg(amount) > (select @mean_var);
+
+select * from customer;
+
